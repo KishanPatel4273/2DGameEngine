@@ -137,18 +137,29 @@ public class Collider {
 		//System.out.println(minAX + " " + maxAX + "  " + minBX + "  " + maxBX);
 		float deltaX = 0;
 		float deltaY = 0;
-		if(maxAX < maxBX) {
-			deltaX = maxAX - minBX;
-			//System.out.println(deltaX);
-		} else {
-			deltaX = maxBX - maxAX;
+		if(contains(maxAX, minBX, minAX) && contains(maxAX, maxBX, minAX)) {
+			deltaX = maxBX - minBX;
+		} else if(contains(maxBX, minAX, minBX) && contains(maxBX, maxAX, minBX)) {
+			deltaX = maxAX - minAX;
+		} else { 
+			if(maxAX < maxBX) {
+				deltaX = maxAX - minBX;
+			} else {
+				deltaX = maxBX - maxAX;
+			}
 		}
-		if(maxBY > maxAY) {
-			deltaY = maxAY - minBY;
+		if(contains(maxAY, minBY, minAY) && contains(maxAY, maxBY, minAY)) {
+			deltaY = maxBY - minBY;
+		} else if(contains(maxBY, minAY, minBY) && contains(maxBY, maxAY, minBY)) {
+			deltaY = maxAY - minAY;
 		} else {
-			deltaY = maxBY - minAY;
+			if(maxAY > maxBY) {
+				deltaY = maxBY - minAY;
+			} else {
+				deltaY = maxAY - minBY;
+			}
 		}
-		return deltaX * deltaY;
+		return deltaY * deltaX;
 	}
 	
 }

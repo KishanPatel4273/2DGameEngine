@@ -18,8 +18,12 @@ public class Engine extends Render{
 		super(width, height);//create render inside engine class
 		int w  = 100, h = 100;
 
+		
 		entities.add(new Entity(250, 750, 40, 40, 1));
 
+		entities.add(new Entity(750, 250, 100, 500, 1));
+
+		
 		entities.add(new Entity(0, 100, 500, 100, 1));
 
 		entities.add(new Entity(0, 1000, 100, 1500, 1));
@@ -38,6 +42,9 @@ public class Engine extends Render{
 		
 		
 		//entities.add(new Entity(300, 800, 200, 600, 1));
+		
+		entities.add(new Entity(500, 600, w*3, h*3, 1));
+
 		entities.add(new Player(400, 350, 100, 200));
 		
 		

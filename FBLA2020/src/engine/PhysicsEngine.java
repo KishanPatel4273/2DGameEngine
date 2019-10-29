@@ -193,7 +193,6 @@ public class PhysicsEngine {
 		return forceFix;
 	}
 	
-	
 	/**
 	 * 	Collider top_right = new Collider(c.getX() + c.getWidth(), c.getY() + e.getHeight()/2, e.getWidth()/2, e.getHeight()/2);
 					Collider top_left = new Collider(c.getX() - e.getWidth()/2, c.getY() + e.getHeight()/2, e.getWidth()/2, e.getHeight()/2);
