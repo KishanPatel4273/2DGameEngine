@@ -2,6 +2,7 @@ package objects;
 
 import controller.Controller;
 import controller.InputHandler;
+import window.Display;
 
 public class Player extends Entity{
 
@@ -21,6 +22,6 @@ public class Player extends Entity{
 	//overrides the entity update method
 	public void update() {
 		//calls an update to controller to let user update player
-		controller.update(this, InputHandler.key);
+		controller.update(this, InputHandler.key, Display.numberOfTicks);
 	}
 }

@@ -24,13 +24,15 @@ public class Display extends Canvas implements Runnable {
 	public static final int HEIGHT = 10 * SCALE;
 	public static final int MAX_NUM_PIXELS = WIDTH*HEIGHT;
 	public static final String TITLE = "Tester";
-
+	public static long numberOfTicks = 0;
+	
 	private Thread thread;
 
 	private BufferedImage img;
 	private boolean running = false;
 	private int[] pixels;
 	private int fps;
+	
 
 	private Engine engine;
 	private InputHandler input;
@@ -93,7 +95,7 @@ public class Display extends Canvas implements Runnable {
 		double secondsPerTick = 1 / 60.0;
 		int tickCount = 0;
 		boolean ticked = false;
-
+		
 		while (running) {
 			long currentTime = System.nanoTime();
 			long passedTime = currentTime - previousTime;
@@ -107,9 +109,10 @@ public class Display extends Canvas implements Runnable {
 				tickCount++;
 				if (tickCount % 3 == 0) {//calls on tick 20x/second
 					tick();
+					numberOfTicks++;
 				}
 				if (tickCount % 60 == 0) {
-					// System.out.println(frames + "fps");
+					//System.out.println(frames + "fps");
 					fps = frames;
 					previousTime += 1000;
 					frames = 0;

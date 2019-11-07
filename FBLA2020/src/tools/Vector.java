@@ -20,6 +20,9 @@ public class Vector {
 	 * Calculates the length of vector
 	 */
 	public float getMagnitude() {
+		if(x == 0 || y == 0) {//root is expensive
+			return x + y;//at least one is zero so it works out
+		}
 		return (float) Math.sqrt(x * x + y * y);
 	}
 
@@ -65,7 +68,7 @@ public class Vector {
 	 * vector v gets scaled by scaler
 	 * scaler * v
 	 */
-	public static Vector scale(Vector v, float scale) {
+	public static Vector scale(float scale, Vector v) {
 		return new Vector(v.getX() * scale, v.getY() * scale);
 	}
 
@@ -74,7 +77,7 @@ public class Vector {
 	 * v -> v hat
 	 */
 	public static Vector normalize(Vector v) {
-		return scale(v, 1.0f/v.getMagnitude());
+		return scale(1.0f/v.getMagnitude(), v);
 	}
 
 	/**
@@ -100,5 +103,24 @@ public class Vector {
 	public static Vector subtract(Vector a, Vector b) {
 		return new Vector(a.getX() - b.getX(), a.getY() - b.getY());
 	}
-
+	
+	
+	/**
+	 *calculates the the 2d cross of v and u
+	 */
+	public static float crossProduct(Vector v, Vector u) {
+		//return v x u
+		//which can be interpreted as det([vu]) so the polygon created by v and u
+		return v.getX()*u.getY() - v.getY()*u.getX();
+	}
+	
+	/**
+	 * treat v and u as matrixes
+	 * calculates Hadamard product on v and u
+	 * which is a point-wise multiplication
+	 */
+	public static Vector hadamardProduct(Vector v, Vector u) {
+		//calculates v∘u 
+		return new Vector(v.getX() * u.getX(), v.getY() * u.getY());
+	}
 }

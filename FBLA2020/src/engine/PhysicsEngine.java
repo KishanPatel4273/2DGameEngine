@@ -12,7 +12,7 @@ public class PhysicsEngine {
 	 */
 	public static Vector collisionDetection(Collider c) {
 		Vector forceFix = new Vector();
-		for(Entity e: Engine.entities) {//runs through all the entities in frame
+		for(Entity e: Engine.entitiesInFrame) {//runs through all the entities in frame
 			if(e.isCollidable() && e.getId() != 0) {//sees if collider c can collied with the entity and isn't its self(a player entity)
 				if(Collider.intersect(c, e.getCollider())) {//collider c clips entity e
 					//collider's around collider c:right, top, left, bottom
@@ -33,6 +33,8 @@ public class PhysicsEngine {
 					Collider EleftFace = new Collider(e.getX() - c.getWidth()/2, e.getY(), c.getWidth()/2, e.getHeight());
 					Collider EtopFace = new Collider(e.getX(), e.getY() + c.getHeight()/2, e.getWidth(), c.getHeight()/2);
 					Collider EbottomFace = new Collider(e.getX(), e.getY() - e.getHeight(), e.getWidth(), c.getHeight()/2);			
+					
+					
 					
 					Engine.collider.set(0, ErightFace);
 					Engine.collider.set(1, EtopFace);
@@ -70,8 +72,9 @@ public class PhysicsEngine {
 					//checks which direction the clipping is happening
 					//applies the fix calculated above in the right direction
 					//tells the entity which face it was hit on using the complex plain	
-
-					if(e.getHeight() == e.getWidth()) {
+					
+					
+					if(e.getHeight() == e.getWidth() && e.getWidth() <= 200) {
 						if(Collider.contains(leftFace, e.getCenter())) {
 							forceFix.addX(x);
 							e.collide("1");
@@ -118,6 +121,21 @@ public class PhysicsEngine {
 							//System.out.println(topArea + " " + bottomArea + " " + leftArea + " " + rightArea);
 							//System.out.println(Collider.overLappingArea(new Collider(-1, 5, 3, 3), new Collider(1,3,3,3)));
 							if(minLength.getX() >= minLength.getY()) {//major axis x
+								if(Collider.intersect(topFace, e.getCollider()) || Collider.intersect(bottomFace, e.getCollider())) {
+									if(deltaCenter.getY() <= minLength.getY()) {
+										if(leftArea < topArea && rightArea < topArea 
+											|| (leftArea < bottomArea && rightArea < bottomArea)) {
+											if(Collider.contains(top, e.getCenter())) {
+												forceFix.addY(-y);
+												e.collide("-i");
+											}
+											if(Collider.contains(bottom, e.getCenter())) {
+												forceFix.addY(y);
+												e.collide("i");
+											}
+										}
+									}
+								}
 								if(Collider.intersect(leftFace, e.getCollider()) || Collider.intersect(rightFace, e.getCollider())) {
 									if(deltaCenter.getX() <= minLength.getX()) {
 										if(leftArea > topArea && leftArea > bottomArea
@@ -131,41 +149,10 @@ public class PhysicsEngine {
 												e.collide("-1");
 											}
 										}
-									}
-									if(Collider.intersect(topFace, e.getCollider()) || Collider.intersect(bottomFace, e.getCollider())) {
-										if(deltaCenter.getY() <= minLength.getY()) {
-											if(leftArea < topArea && rightArea < topArea 
-												|| (leftArea < bottomArea && rightArea < bottomArea)) {
-												if(Collider.contains(top, e.getCenter())) {
-													forceFix.addY(-y);
-													e.collide("-i");
-												}
-												if(Collider.contains(bottom, e.getCenter())) {
-													forceFix.addY(y);
-													e.collide("i");
-												}
-											}
-										}
 									} 
 								}
 							}
 							if(minLength.getY() >= minLength.getX()) {//major axis y
-								if(Collider.intersect(leftFace, e.getCollider()) || Collider.intersect(rightFace, e.getCollider())) {
-									if(deltaCenter.getX() <= minLength.getX()) {
-										if(leftArea > topArea && leftArea > bottomArea) {
-											if(Collider.contains(left, e.getCenter())) {
-												forceFix.addX(x);
-												e.collide("1");
-											}
-										}
-										if(rightArea > topArea && rightArea > bottomArea) {
-											if(Collider.contains(right, e.getCenter())) {
-												forceFix.addX(-x); 
-												e.collide("-1");
-											}
-										}
-									}
-								}
 								if(Collider.intersect(topFace, e.getCollider()) || Collider.intersect(bottomFace, e.getCollider())) {
 									if(deltaCenter.getY() <= minLength.getY()) {
 										if(leftArea < topArea && rightArea < topArea) {
@@ -181,8 +168,24 @@ public class PhysicsEngine {
 											}
 										}
 									}
+								}
+								if(Collider.intersect(leftFace, e.getCollider()) || Collider.intersect(rightFace, e.getCollider())) {
+									if(deltaCenter.getX() <= minLength.getX()) {
+										if(leftArea > topArea && leftArea > bottomArea) {
+											if(Collider.contains(left, e.getCenter())) {
+												forceFix.addX(x);
+												e.collide("1");
+											}
+										}
+										if(rightArea > topArea && rightArea > bottomArea) {
+											if(Collider.contains(right, e.getCenter())) {
+												forceFix.addX(-x); 
+												e.collide("-1");
+											}
+										}
+									}
 								} 
-							}
+							}	
 						}
 					}
 					//adds fix vector to collider c before it checks to see if any other collision still happen after the fix
@@ -193,67 +196,22 @@ public class PhysicsEngine {
 		return forceFix;
 	}
 	
-	/**
-	 * 	Collider top_right = new Collider(c.getX() + c.getWidth(), c.getY() + e.getHeight()/2, e.getWidth()/2, e.getHeight()/2);
-					Collider top_left = new Collider(c.getX() - e.getWidth()/2, c.getY() + e.getHeight()/2, e.getWidth()/2, e.getHeight()/2);
-					Collider bottom_right = new Collider(c.getX() + c.getWidth(), c.getY() - c.getHeight(), e.getWidth()/2, e.getHeight()/2);
-					Collider bottom_left = new Collider(c.getX() - e.getWidth()/2, c.getY() - c.getHeight(), e.getWidth()/2, e.getHeight()/2);
-
-Collider right = new Collider(c.getX() + c.getWidth(), c.getY(), e.getWidth()/2, c.getHeight());
-					Collider top = new Collider(c.getX(), c.getY() + e.getHeight()/2, c.getWidth(), e.getHeight()/2);
-					Collider left = new Collider(c.getX() - e.getWidth()/2, c.getY(), e.getWidth()/2, c.getHeight());
-					Collider bottom = new Collider(c.getX(), c.getY() - c.getHeight(), c.getWidth(), e.getHeight()/2);
-
-
-						if(Collider.intersect(ErightFace, c)  && Collider.intersect(leftFace, e.getCollider())) {
-							forceFix.addX(x);
-							e.collide("1");
-						}
-						if(Collider.intersect(EleftFace, c) && Collider.intersect(rightFace, e.getCollider())) {
-							forceFix.addX(-x); 
-							e.collide("-1");
-						}
-						if(Collider.intersect(EbottomFace, c) && Collider.intersect(topFace, e.getCollider())) {
-							forceFix.addY(-y);
-							e.collide("-i");
-						}
-						if(Collider.intersect(EtopFace, c) && Collider.intersect(bottomFace, e.getCollider())) {
-							forceFix.addY(y);
-							e.collide("i");
-						}
-						
-							
-							if(deltaCenter.getX() <= minLength.getX()) {
-							if(Collider.intersect(EleftFace, c) || Collider.intersect(ErightFace, c)) {
-								if(Collider.intersect(leftFace, e.getCollider()) || Collider.intersect(rightFace, e.getCollider())) {
-									if(c.getCenter().getX() <= e.getCenter().getX() ||  c.getCenter().getX() >= e.getCenter().getX()) {
-									if(Collider.contains(left, e.getCenter())) {
-										forceFix.addX(x);
-										e.collide("1");
-									}
-									if(Collider.contains(right, e.getCenter())) {
-										forceFix.addX(-x); 
-										e.collide("-1");
-									}
-									}
-								}					
-							}
-						}
-						if(deltaCenter.getY() <= minLength.getY()) {
-							if(Collider.intersect(EtopFace, c) || Collider.intersect(EbottomFace, c)) {
-								if(Collider.intersect(topFace, e.getCollider()) || Collider.intersect(bottomFace, e.getCollider())) {
-								if(c.getCenter().getY() <= e.getCenter().getY() ||  c.getCenter().getY() >= e.getCenter().getY()) {
-								if(Collider.contains(top, e.getCenter())) {
-									forceFix.addY(-y);
-									e.collide("-i");
-								}
-								if(Collider.contains(bottom, e.getCenter())) {
-									forceFix.addY(y);
-									e.collide("i");
-								}
-								}
-								}
-							}
-						}
-	 */
+	//sees of collider c is colliding with anything it shouldn't be colliding with
+	public static boolean collides(Collider c) {
+		for(Entity e: Engine.entities) {//runs through all the entities in frame
+			if(e.isCollidable() && e.getId() != 0) {//sees if collider c can collied with the entity and isn't its self 
+				if(Collider.intersect(c, e.getCollider())) {//e and c intersect/clip/collide
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//calculates delta x for projectile motion
+	public static float projectileMotion(float v, float a, float t, float tickrate) {
+		//delta x = vt + 1/2at^2
+		return v*t* tickrate + .5f * a * t * t * tickrate*tickrate;
+	}
+	
 }

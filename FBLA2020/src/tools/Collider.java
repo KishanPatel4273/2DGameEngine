@@ -87,7 +87,7 @@ public class Collider {
 		//p - position of collider(center) and v -(x,y) to calculate if v is inside the collider
 		// |p-v| < 1/2(width, height)
 		Vector center = c.getCenter();
-		return Math.abs(center.getX() - x) <= c.getWidth()/2 && Math.abs(center.getY() - y) <= c.getHeight()/2; 
+		return 2 * Math.abs(center.getX() - x) <= c.getWidth() && 2 * Math.abs(center.getY() - y) <= c.getHeight(); 
 	}
 	
 	/**
@@ -113,6 +113,7 @@ public class Collider {
 	 * Checks whether x is in between a and b
 	 */
 	public static boolean contains(float a, float x, float b) {
+		//checks if x is in between both and b
 		return Math.max(a, b) >= x && x >= Math.min(a, b);
 	}
 	
@@ -121,9 +122,11 @@ public class Collider {
 	 */
 	public static float overLappingArea(Collider a, Collider b) {
 		//area = x intersection * y intersection
-		if(!intersect(a, b)) {
+		if(!intersect(a, b)) {// if a and b don't intersect area is 0
 			return 0;
 		}
+	
+		//Minimums and maximum for each axis and each collider
 		float minAX = Math.min(a.getX(), a.getX() + a.getWidth());
 		float maxAX = Math.max(a.getX(), a.getX() + a.getWidth());
 		float minBX = Math.min(b.getX(), b.getX() + b.getWidth());
@@ -134,31 +137,37 @@ public class Collider {
 		float minBY = Math.min(b.getY(), b.getY() - b.getHeight());
 		float maxBY = Math.max(b.getY(), b.getY() - b.getHeight());
 		
-		//System.out.println(minAX + " " + maxAX + "  " + minBX + "  " + maxBX);
+		//calculates overlap
+		//calculations are done in respect to a Euclidean space
 		float deltaX = 0;
 		float deltaY = 0;
+		//if one contains the other full the delta in that axis is the length in the contained object
 		if(contains(maxAX, minBX, minAX) && contains(maxAX, maxBX, minAX)) {
 			deltaX = maxBX - minBX;
 		} else if(contains(maxBX, minAX, minBX) && contains(maxBX, maxAX, minBX)) {
 			deltaX = maxAX - minAX;
 		} else { 
+			//calculated partial overlap
 			if(maxAX < maxBX) {
 				deltaX = maxAX - minBX;
 			} else {
 				deltaX = maxBX - maxAX;
 			}
 		}
+		//if one contains the other full the delta in that axis is the length in the contained object
 		if(contains(maxAY, minBY, minAY) && contains(maxAY, maxBY, minAY)) {
 			deltaY = maxBY - minBY;
 		} else if(contains(maxBY, minAY, minBY) && contains(maxBY, maxAY, minBY)) {
 			deltaY = maxAY - minAY;
 		} else {
+			//calculated partial overlap
 			if(maxAY > maxBY) {
 				deltaY = maxBY - minAY;
 			} else {
 				deltaY = maxAY - minBY;
 			}
 		}
+		//returns the product if the two overlaps to get the area of intersection
 		return deltaY * deltaX;
 	}
 	
