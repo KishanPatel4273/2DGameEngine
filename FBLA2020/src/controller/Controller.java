@@ -92,5 +92,4 @@ public class Controller {
 		velocity.setX(0);//set to 0 after collision so let physics engine know current velocity
 		player.addVector(collisonFix);//fixes players position to stop collision
 	}
-	
 }
