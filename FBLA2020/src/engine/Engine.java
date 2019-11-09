@@ -23,6 +23,7 @@ public class Engine extends Render{
 		entities.add(new Entity(250, 750, 40, 40, 1));
 
 		entities.add(new Entity(750, 250, 100, 500, 1));
+		entities.add(new Entity(750, 250, 100, 100, 1));
 
 		
 		entities.add(new Entity(0, 100, 500, 100, 1));

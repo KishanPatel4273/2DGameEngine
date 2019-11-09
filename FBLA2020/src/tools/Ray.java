@@ -52,7 +52,6 @@ public class Ray {
 				
 				//Calculates the distance away between start and segment of e
 				currentDistance = segmentIntersection(start, endOfSegment1, entitySegement1, entitySegement2);
-				
 				//if this entity intersection is closer it replaces the current
 				if(currentDistance != -1 && currentDistance < minL) {
 					minL = currentDistance;	
