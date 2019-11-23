@@ -2,6 +2,9 @@ package engine;
 
 import java.util.ArrayList;
 
+import button.ButtonHandler;
+import engine.editor.EditorScreen;
+import loaders.LevelLoader;
 import objects.*;
 import sound.SoundEffect;
 import tools.*;
@@ -17,11 +20,23 @@ public class Engine extends Render{
 
 	
 	public static Collider Frame;
+	public static Vector deltaTranslate = new Vector();
+	
+	public ButtonHandler buttonHandler;
+	public EditorScreen editorScreen;
+	public LevelLoader test;
 	
 	public Engine(int width, int height) {
 		super(width, height);//create render inside engine class
 		int w  = 100, h = 100;
 		Frame = new Collider(0, height, width, height);
+		
+		buttonHandler = new ButtonHandler();
+		editorScreen = new EditorScreen("res/hitbox.txt");
+		buttonHandler.addListener();
+		
+		test = new LevelLoader("res/hitbox.txt");
+		test.load();
 		
 		//entities.add(new Entity(250, 750, 40, 40, 1));
 
@@ -84,14 +99,17 @@ public class Engine extends Render{
 	//second game loop for engine
 	//updates all game functions such as render and tick  
 	public void run() {
+		
+		buttonHandler();
+		
 		clear();//clears the pixel array so old frame is gone
 		updateFrame();//updates frame to only render and tick entities in frame
-
+		
+		//rendering 
 		for(int i = 0; i < entitiesInFrame.size(); i++) {//runs through all entities
 			update(entitiesInFrame.get(i));
 			render(entitiesInFrame.get(i));						
 		}
-		
 		for(Collider c: collider) {
 			//drawRectangle(c.getX(), c.getY(), c.getWidth(), c.getHeight(), 16711680);
 		}
@@ -99,8 +117,24 @@ public class Engine extends Render{
 			drawLine(vectors.get(i).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i+1).getY(), 65280);
 			//drawLine(vectors.get(i).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i).getY(), 65280);
 			//drawLine(vectors.get(i+1).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i+1).getY(), 65280);
-
 		}
+		
+		editorScreenButtonHandler();
+	}
+	
+	/**
+	 * handles the games buttons
+	 */
+	public void buttonHandler() {
+		buttonHandler.tick();//ticks button handler to update it
+	}
+	
+	/**
+	 * handles the editor screen buttons and rendering of it
+	 */
+	public void editorScreenButtonHandler() {
+		editorScreen.tick(this);
+		ButtonHandler.clear();	
 	}
 	
 	/**
@@ -139,6 +173,7 @@ public class Engine extends Render{
 	 * method doen't effect the player
 	 */
 	public static void translateFrame(Vector translate) {
+		deltaTranslate.addVector(translate);//updates deltaTranslate
 		for(Entity e: entities) {//runs through all entities
 			if(e.getId() != 0) {//not player entity
 				//applies -translate to all entities this keeps contents(distance) same

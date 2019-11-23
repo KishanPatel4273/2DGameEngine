@@ -14,8 +14,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 	//Describes information about the mouse
 	public static int mouseX;
 	public static int mouseY;
-	public boolean mouseClicked;
-	
+	public static boolean mouseClicked;
 	
 	//many methods don't have comments because they weren't used
 	public void mouseDragged(MouseEvent e) {
@@ -32,7 +31,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 
 	//sees if mouse is clicked
 	public void mouseClicked(MouseEvent e) {
-		mouseClicked = true;
+		//mouseClicked = true;
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class Render {
 	/**
 	 * converts rgb to an rgb int type
 	 */
-	public int toRGBInt(int r, int g, int b) {
+	public static int toRGBInt(int r, int g, int b) {
 		//converts rgb to int rgb by playing with bits
 		return ((r&0x0ff)<<16)|((g&0x0ff)<<8)|(b&0x0ff);
 	}
@@ -155,6 +155,32 @@ public class Render {
 		drawLine(x, y - height, x + width, y - height, color);//bottom
 		drawVerticalLine(x, y, y-height, color);//left
 		drawVerticalLine(x + width, y, y-height, color);//right
+	}
+	
+	/**
+	 * draws rectangle with a and b as its corners
+	 */
+	public void drawRectangle(Vector a, Vector b, int color) {
+		int x = (int) Math.min(a.getX(), b.getX());//left most x value of the rectangle
+		int y = (int) Math.max(a.getY(), b.getY());//top most y value of the rectangle
+		//the length of rectangle in each dimension is |deta axis|
+		int w = (int) Math.abs(a.getX() - b.getX()) + 1;
+		int h = (int) Math.abs(a.getY() - b.getY()) + 1;
+		drawRectangle(x, y, w, h, color);
+
+	}
+	
+	/**
+	 * converts two corners of a rectangle to the top left position and width and height array
+	 */
+	public int[] convertDimension(Vector a, Vector b) {
+		int x = (int) Math.min(a.getX(), b.getX());//left most x value of the rectangle
+		int y = (int) Math.max(a.getY(), b.getY());//top most y value of the rectangle
+		//the length of rectangle in each dimension is |deta axis|
+		int w = (int) Math.abs(a.getX() - b.getX());
+		int h = (int) Math.abs(a.getY() - b.getY());
+		int[] d = {x, y, w, h};
+		return d;
 	}
 	
 	/**

@@ -75,7 +75,7 @@ public class Collider {
 		return new Vector(x + width/2, y - height/2);
 	}
 	
-	//calclates total area of collider
+	//Calculates total area of collider
 	public float getArea() {
 		return width*height;
 	}

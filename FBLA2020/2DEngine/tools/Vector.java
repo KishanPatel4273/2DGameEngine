@@ -21,7 +21,7 @@ public class Vector {
 	 */
 	public float getMagnitude() {
 		if(x == 0 || y == 0) {//root is expensive
-			//root(o + x^x) = |x| + 0
+			//root(0 + x^x) = |x| + 0
 			return Math.abs(x + y);//at least one is zero so it works out
 		}
 		return (float) Math.sqrt(x * x + y * y);

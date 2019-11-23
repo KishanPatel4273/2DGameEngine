@@ -1,13 +1,17 @@
 package objects;
 
+import java.awt.event.KeyEvent;
+
 import controller.Controller;
 import controller.InputHandler;
+import loaders.LoadFile;
 import window.Display;
 
 public class Player extends Entity{
 
 	private Controller controller;
 	private int playerNumber;
+	
 	
 	//Entity is a subset of player
 	public Player(int x, int y, int width, int height, int playerNumber) {

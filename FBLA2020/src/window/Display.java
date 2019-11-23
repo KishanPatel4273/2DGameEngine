@@ -11,6 +11,7 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 
+import button.ButtonHandler;
 import controller.InputHandler;
 import engine.Engine;
 import engine.Render;
@@ -20,9 +21,9 @@ public class Display extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
-	static final int SCALE = 100;
-	public static final int WIDTH = 10 * SCALE;
-	public static final int HEIGHT = 10 * SCALE;
+	public static final int SCALE = 320;
+	public static final int WIDTH = 4 * SCALE;
+	public static final int HEIGHT = 3 * SCALE;
 	public static final int MAX_NUM_PIXELS = WIDTH*HEIGHT;
 	public static final String TITLE = "Tester";
 	public static long numberOfTicks = 0;
@@ -39,7 +40,7 @@ public class Display extends Canvas implements Runnable {
 		
 	public Display() {
 		//sets up the size of the window
-		Dimension size = new Dimension(WIDTH, HEIGHT);
+		Dimension size = new Dimension(WIDTH + SCALE, HEIGHT);
 		setPreferredSize(size);
 		setMinimumSize(size);
 		setMaximumSize(size);
@@ -158,9 +159,15 @@ public class Display extends Canvas implements Runnable {
 	public static void main(String[] args) {
 		Display game = new Display();
 		JFrame frame = new JFrame(TITLE);
+		//adds all button to display
+		for(int i = 0; i < ButtonHandler.buttonList.size(); i++){
+			//adds button from main list to frame
+			frame.add(ButtonHandler.buttonList.get(i).getButton());
+		}
+		
 		frame.add(game);
 		frame.pack();
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
