@@ -3,6 +3,7 @@ package engine;
 import java.util.ArrayList;
 
 import objects.*;
+import sound.SoundEffect;
 import tools.*;
 
 public class Engine extends Render{
@@ -10,8 +11,10 @@ public class Engine extends Render{
 	//array to hold all entity types
 	public static ArrayList<Entity> entities = new ArrayList<Entity>();
 	public static ArrayList<Entity> entitiesInFrame = new ArrayList<Entity>();
+	
 	public static ArrayList<Collider> collider = new ArrayList<Collider>();
 	public static ArrayList<Vector> vectors = new ArrayList<Vector>();
+
 	
 	public static Collider Frame;
 	
@@ -20,7 +23,7 @@ public class Engine extends Render{
 		int w  = 100, h = 100;
 		Frame = new Collider(0, height, width, height);
 		
-		entities.add(new Entity(250, 750, 40, 40, 1));
+		//entities.add(new Entity(250, 750, 40, 40, 1));
 
 		entities.add(new Entity(750, 250, 100, 500, 1));
 		entities.add(new Entity(750, 250, 100, 100, 1));
@@ -58,8 +61,9 @@ public class Engine extends Render{
 		
 		//	entities.add(new Entity(500, 600, w*3, h*3, 1));
 
-		entities.add(new Player(400, 400, 100, 200));
-		
+		entities.add(new Player(400, 400, 100, 200, 1));
+		//entities.add(new Player(600, 400, 100, 200, 2));
+
 		
 		collider.add(new Collider(0,0,0,0));
 		collider.add(new Collider(0,0,0,0));
@@ -92,7 +96,7 @@ public class Engine extends Render{
 			//drawRectangle(c.getX(), c.getY(), c.getWidth(), c.getHeight(), 16711680);
 		}
 		for(int i = 0; i < vectors.size()-1; i++) {
-			//drawLine(vectors.get(i).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i+1).getY(), 65280);
+			drawLine(vectors.get(i).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i+1).getY(), 65280);
 			//drawLine(vectors.get(i).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i).getY(), 65280);
 			//drawLine(vectors.get(i+1).getX(), vectors.get(i).getY(), vectors.get(i+1).getX(), vectors.get(i+1).getY(), 65280);
 
@@ -126,6 +130,19 @@ public class Engine extends Render{
 			if(Collider.intersect(entities.get(i).getCollider(), Frame) || entities.get(i).getTag().equals("Player")) {
 				entitiesInFrame.add(entities.get(i));//adds entity to array
 				//bc objects are statics the manipulation of the object in one entity will update it in the other array 
+			}
+		}
+	}
+	
+	/**
+	 * translates the frame by moving all entities by -translate
+	 * method doen't effect the player
+	 */
+	public static void translateFrame(Vector translate) {
+		for(Entity e: entities) {//runs through all entities
+			if(e.getId() != 0) {//not player entity
+				//applies -translate to all entities this keeps contents(distance) same
+				e.addVector(Vector.scale(-1, translate));
 			}
 		}
 	}

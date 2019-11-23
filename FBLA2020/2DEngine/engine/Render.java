@@ -1,6 +1,7 @@
 package engine;
 
 import objects.Entity;
+import tools.Vector;
 
 public class Render {
 	
@@ -27,6 +28,47 @@ public class Render {
 	public void clear() {
 		//clears the array my making it equal a new array of same length
 		pixels = new int[max_num_pixels];
+	}
+	
+	/**
+	 * converts rgb to an rgb int type
+	 */
+	public int toRGBInt(int r, int g, int b) {
+		//converts rgb to int rgb by playing with bits
+		return ((r&0x0ff)<<16)|((g&0x0ff)<<8)|(b&0x0ff);
+	}
+	
+	
+	/**
+	 * converts grayScale to an rgb int type
+	 * grayScale is between 0 and 1
+	 */
+	public int toRGBInt(float grayScale) {
+		//if gs = 0 then c = 0 so pure black and if gs = 1 then 255 pure white
+		int c = (int) (255 * grayScale);
+		return toRGBInt(c, c, c);
+	}
+	
+	/**
+	 * maps x in [y1, y2] to [z1, z2]
+	 */
+	public static float map(float x, float y1, float y2, float z1, float z2) {
+		//x/range1 = xf/range2
+		//y1 + x/range = x
+		return (x * (z2 - z1) ) / (y2 - y1) + z1;
+	}
+	
+	/**
+	 * plots 2D noise
+	 */
+	public void draw2DNoise(float[] noise, Vector start, int color) {
+		for (int i = 0; i < noise.length - 1; i++) {
+			int x = (int) start.getX() + i;
+			int y = (int) start.getY() + (int) noise[i];
+			int x1 = (int) start.getX() + i + 1;
+			int y1 = (int) start.getY() + (int) noise[i + 1];
+			drawLine(x,y, x1, y1, color);
+		}
 	}
 	
 	/**

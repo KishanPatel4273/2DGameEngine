@@ -5,12 +5,97 @@ import tools.*;
 
 public class PhysicsEngine {
 	
+	public static Vector collisionFix(Collider c, Vector velocity) {
+		Vector forceFix = new Vector();
+		//velocity = Vector.normalize(velocity);
+		for(Entity e: Engine.entitiesInFrame) {//runs through all the entities in frame
+			if(e.isCollidable() && e.getId() != 0) {//sees if collider c can collied with the entity and isn't its self(a player entity)
+				if(Collider.intersect(c, e.getCollider())) {//collider c clips entity e
+					
+					//absolute distance between centers
+					Vector deltaCenter = new Vector(Math.abs((c.getX() + c.getWidth()/2) - (e.getX() + e.getWidth()/2))
+													   , Math.abs((c.getY() - c.getHeight()/2) - (e.getY() - e.getHeight()/2)));
+					Vector minLength = new Vector((c.getWidth() + e.getWidth())/2, (c.getHeight() + e.getHeight())/2);
+					Vector intersect = Vector.subtract(minLength, deltaCenter);
+					if(velocity.getMagnitude() != 0) {
+						Engine.vectors.set(1, Vector.add(velocity, c.getCenter()));						
+					}
+					Engine.vectors.set(0, c.getCenter());
+									
+					forceFix.addVector(collisonFixY(c, e, Vector.normalize(velocity).getY()));
+					c.addVector(forceFix);
+					forceFix.addVector(collisonFixX(c, e, Vector.normalize(velocity).getX()));
+
+
+				
+				}
+			}
+		}
+		return forceFix;
+	}
+	
+	public static Vector collisonFixY(Collider c, Entity e, float velocityY) {
+		Vector forceFix = new Vector();//vector to move player to stop collisions
+		
+		//colliders on top and bottom of player with dimensions proportional to both entities
+		Collider topFace = new Collider(c.getX(), c.getY() + e.getHeight()/2, c.getWidth(), e.getHeight()/2);
+		Collider bottomFace = new Collider(c.getX(), c.getY() - c.getHeight(), c.getWidth(), e.getHeight()/2);
+		
+		//distances between centers
+		float deltaY = Math.abs((c.getY() - c.getHeight()/2) - (e.getY() - e.getHeight()/2));
+		float minLengthY = (c.getHeight() + e.getHeight())/2;//max length of delatY
+		int intersectY = (int) (minLengthY - deltaY);//Difference between minL and deltaY
+		
+		boolean switchM = false;
+		//checks for face and center intersection
+		if(Collider.contains(topFace, e.getCenter())) {
+			forceFix.addY(-intersectY);
+			e.collide("-i");//face entity was hit
+			switchM = true;
+		}
+		if(Collider.contains(bottomFace, e.getCenter())) {
+			forceFix.addY(intersectY);
+			e.collide("i");//face entity was hit
+			switchM = true;
+		}
+		//if collision in y isn't picked up before. 
+		if(!switchM) {
+			//forceFix.setY(-velocityY/Math.abs(velocityY) * intersectY);
+			//System.out.println(intersectY);
+		}
+		return forceFix;
+	}
+	
+	public static Vector collisonFixX(Collider c, Entity e, float velocityX) {
+		Vector forceFix = new Vector();//vector to move player to stop collisions
+		
+		//colliders on right and left of player with dimensions proportional to both entities
+		Collider rightFace = new Collider(c.getX() + c.getWidth(), c.getY(), e.getWidth()/2, c.getHeight());
+		Collider leftFace = new Collider(c.getX() - e.getWidth()/2, c.getY(), e.getWidth()/2, c.getHeight());
+
+		//distances between centers
+		float deltaX = Math.abs((c.getX() + c.getWidth()/2) - (e.getX() + e.getWidth()/2));
+		float minLengthX = (c.getWidth() + e.getWidth());//max length of delatX
+		int intersectX = (int) (minLengthX - deltaX);//Difference between minL and deltaX
+		
+		//checks for face and center intersection
+		if(Collider.contains(leftFace, e.getCenter())) {
+			forceFix.addX(intersectX);//face entity was hit
+			e.collide("1");
+		}
+		if(Collider.contains(rightFace, e.getCenter())) {
+			forceFix.addX(-intersectX); //face entity was hit
+			e.collide("-1");
+		}
+		return forceFix;
+	}
+	
 	/**
 	 *Checks whether collider c has collided with anything, the collider can represent an entity
 	 *if so it tells that entity the direction it collided with
 	 *and returns a vector describing the translation of collilder to move to stop clipping
 	 */
-	public static Vector collisionDetection(Collider c) {
+	public static Vector collisionFix(Collider c) {
 		Vector forceFix = new Vector();
 		for(Entity e: Engine.entitiesInFrame) {//runs through all the entities in frame
 			if(e.isCollidable() && e.getId() != 0) {//sees if collider c can collied with the entity and isn't its self(a player entity)
@@ -194,6 +279,20 @@ public class PhysicsEngine {
 			}
 		}
 		return forceFix;
+	}
+	
+	/**
+	 * if collider c collides with any entity it will give the entity an notification
+	 */
+	public static void collisionDetection(Collider c) {
+		for(Entity e: Engine.entitiesInFrame) {//runs through all the entities in frame
+			if(e.isCollidable() && e.getId() != 0) {//check if its collidable
+				if(Collider.intersect(c, e.getCollider())) {//if the two intersect
+					e.collide("0");//tells entity e that it has been "hit"
+					//0 signifies that direction is unknown
+				}
+			}
+		}
 	}
 	
 	//sees of collider c is colliding with anything it shouldn't be colliding with

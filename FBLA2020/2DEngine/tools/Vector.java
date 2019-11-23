@@ -21,6 +21,7 @@ public class Vector {
 	 */
 	public float getMagnitude() {
 		if(x == 0 || y == 0) {//root is expensive
+			//root(o + x^x) = |x| + 0
 			return Math.abs(x + y);//at least one is zero so it works out
 		}
 		return (float) Math.sqrt(x * x + y * y);
@@ -110,7 +111,7 @@ public class Vector {
 	 */
 	public static float crossProduct(Vector v, Vector u) {
 		//return v x u
-		//which can be interpreted as det([vu]) so the polygon created by v and u
+		//which can be interpreted as det([vu]) so the area of the polygon created by v and u
 		return v.getX()*u.getY() - v.getY()*u.getX();
 	}
 	

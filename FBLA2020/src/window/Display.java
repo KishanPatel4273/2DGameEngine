@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import controller.InputHandler;
 import engine.Engine;
 import engine.Render;
+import sound.SoundEffect;
 
 public class Display extends Canvas implements Runnable {
 
@@ -33,10 +34,9 @@ public class Display extends Canvas implements Runnable {
 	private int[] pixels;
 	private int fps;
 	
-
-	private Engine engine;
+	private Screen screen;
 	private InputHandler input;
-	
+		
 	public Display() {
 		//sets up the size of the window
 		Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -46,9 +46,8 @@ public class Display extends Canvas implements Runnable {
 
 		img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);//creates an image using rgb int values
 		pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();//creates a 1D array of rgb ints
-
-		engine = new Engine(WIDTH, HEIGHT);
 		
+		screen = new Screen(WIDTH, HEIGHT);
 		//creates inputhandler
 		input = new InputHandler();
 		addKeyListener(input);
@@ -124,11 +123,11 @@ public class Display extends Canvas implements Runnable {
 	}
 
 	private void tick() {
-		engine.run();//runs engines loop
+		screen.update();//updates the screen at 20tick/second
 		//sets all pixel values in array in engine equal to current pixel array values
 		for (int i = 0; i < MAX_NUM_PIXELS; i ++) {
-			pixels[i] = engine.pixels[i]; 
-		}		
+			pixels[i] = screen.engine.pixels[i]; 
+		}
 	}
 	
 	private void render() {

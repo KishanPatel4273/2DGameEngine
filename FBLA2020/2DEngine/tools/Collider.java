@@ -87,7 +87,7 @@ public class Collider {
 		//p - position of collider(center) and v -(x,y) to calculate if v is inside the collider
 		// |p-v| < 1/2(width, height)
 		Vector center = c.getCenter();
-		return 2 * Math.abs(center.getX() - x) <= c.getWidth() && 2 * Math.abs(center.getY() - y) <= c.getHeight(); 
+		return 2 * Math.abs(center.getX() - x) < c.getWidth() && 2 * Math.abs(center.getY() - y) < c.getHeight(); 
 	}
 	
 	/**
