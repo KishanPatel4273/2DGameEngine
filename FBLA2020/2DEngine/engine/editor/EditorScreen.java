@@ -7,6 +7,7 @@ import controller.InputHandler;
 import engine.Engine;
 import engine.Render;
 import loaders.LoadFile;
+import objects.Entity;
 import objects.Hitbox;
 import tools.Vector;
 import window.Display;
@@ -16,6 +17,7 @@ public class EditorScreen {
 	public String path;
 	public LoadFile levelFile;
 	
+	//hitbox editor variables
 	public boolean hitboxEditor = false;
 	public boolean hitboxLatch = true;
 	public Vector initialClick;
@@ -37,7 +39,7 @@ public class EditorScreen {
 		//dimensions are set proportional to extra room added
 		int w = 200;
 		int h = w / 4;
-		int x = Display.WIDTH + Display.SCALE/2 - w/2;
+		int x = Display.WIDTH + Display.SCALE/2;
 		ButtonHandler.buttonList.add(new Button(x,  50, w, h, "addHitBox", true, "Editor"));
 		ButtonHandler.getButton("addHitBox", "Editor").getButton().setBackground(Color.RED);
 		
@@ -45,7 +47,15 @@ public class EditorScreen {
 		ButtonHandler.buttonList.add(new Button(x,  150 + 2 * h/2, w, h, "", true, "Editor"));
 	}
 	
-	
+	/**
+	 * @param path -> new level path
+	 * updates the current level being edited
+	 */
+	public void changeLevel(String path) {	
+		this.path = path;
+		levelFile = new LoadFile(path);
+	}
+
 	public void tick(Render render) {
 		buttonHandler();
 		hitboxHandler(render);
@@ -55,9 +65,11 @@ public class EditorScreen {
 	 * handles the buttons on the editor screen
 	 */
 	private void buttonHandler() {
-		if(ButtonHandler.isTypeTagActive("Editor")) {
-			hitboxEditor = !hitboxEditor;
-			hitboxLatch = true;
+		//if addHitbox is clicked
+		if(ButtonHandler.isActive("addHitBox", "Editor")) {
+			hitboxEditor = !hitboxEditor;//flips state of hitbox editor
+			hitboxLatch = true;//turns latch true to signify editing is ready
+			//turns button blue if on and red if off
 			if(hitboxEditor) {
 				ButtonHandler.getButton("addHitBox", "Editor").getButton().setBackground(Color.BLUE);
 			} else {
@@ -92,10 +104,10 @@ public class EditorScreen {
 					int x = (int) (d[0] + Engine.deltaTranslate.getX());
 					int y = (int) (d[1] + Engine.deltaTranslate.getY());
 					//writes hitbox data to level file
-					String hitboxData = "hitbox|" + x + "|" + y + "|" + d[2] + "|" + d[3] + "|";
+					String hitboxData = "Hitbox|" + x + "|" + y + "|" + d[2] + "|" + d[3] + "|";
 					levelFile.write(hitboxData);
 					//adds hitbox to current entity list
-					Engine.entities.add(new Hitbox(d[0], d[1], d[2], d[3]));
+					Engine.entities.add(1, new Hitbox(d[0], d[1], d[2], d[3]));// at 1 do its before player else error
 					//turns latch off and resets the mouse click
 					hitboxLatch = true;
 					InputHandler.mouseClicked = false;

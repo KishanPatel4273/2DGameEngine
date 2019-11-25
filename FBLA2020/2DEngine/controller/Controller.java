@@ -42,7 +42,6 @@ public class Controller {
 	public void update(Player player, boolean[] key, long currentTick, int playerNumber) {
 		Vector displacement = new Vector();
 		boolean[] keys = new boolean[5];
-	
 		if(key[KeyEvent.VK_R]) {
 			sound.play();
 		}

@@ -19,7 +19,7 @@ public class Entity {
 		this.height = height;
 		//identifiers of entity and its type
 		this.id = id;
-		this.tag = "";
+		this.tag = "Entity";
 		//look in the environment
 		this.transparency = false;
 		this.color = 16777215;
@@ -147,6 +147,11 @@ public class Entity {
 	//creates collider that is the same dimension as the entity
 	public Collider getCollider() {
 		return new Collider(x, y, width, height);
+	}
+
+	@Override
+	public String toString() {
+		return tag + "|" + x + "|" + y + "|" + width + "|" + height + "|" + id + "|" + transparency + "|";	
 	}
 	
 	

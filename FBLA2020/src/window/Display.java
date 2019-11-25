@@ -40,7 +40,7 @@ public class Display extends Canvas implements Runnable {
 		
 	public Display() {
 		//sets up the size of the window
-		Dimension size = new Dimension(WIDTH + SCALE, HEIGHT);
+		Dimension size = new Dimension(WIDTH, HEIGHT);
 		setPreferredSize(size);
 		setMinimumSize(size);
 		setMaximumSize(size);
@@ -141,13 +141,10 @@ public class Display extends Canvas implements Runnable {
 		
 		//Initiates Graphics class using bufferStrategy
 		Graphics g = bs.getDrawGraphics();
-
-		
-		
 		
 		//displays img on screen
 		g.drawImage(img, 0, 0, null);
-
+		
 		g.setColor(Color.CYAN);
 		g.drawString(fps + " FPS", 10, 10);
 		g.setFont(new Font("Arial", 0, 45));

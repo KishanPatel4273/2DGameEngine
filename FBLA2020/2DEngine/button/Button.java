@@ -15,13 +15,14 @@ public class Button {
 	private boolean buttonState;//if button is clicked or not
 	private String title, tag;//Characteristics of button
 	
-	 Color textColor = Color.decode("#ffffff");
-	 Color backgroundColor = Color.decode("#0000ff");
-	 Color hoverColor = Color.decode("#00aced");
+	 Color textColor = Color.decode("#000000");
+	 Color backgroundColor = Color.decode("#ffffff");
+	 Color hoverColor = Color.decode("#ffffff");
 	
 	
 	/**
-	 * creates a button at (x, y) -> (canvas orientation) and with dimensions of (width, height)
+	 * creates a button at (x, y) -> (canvas orientation) -> center of the button
+	 * and with dimensions of (width, height)
 	 * the button will have title on it
 	 * set the set of button with specific tag
 	 * Visibility initially
@@ -30,19 +31,19 @@ public class Button {
 		this.button = new JButton();
 		this.title = title;
 		this.tag = tag;
+		x -= width/2;
+		y += height/2;
 		button.setBounds(x, y, width, height);
 		button.setText(title);
 		button.setVisible(visablity);
 		buttonState = false;
 		
-		
-		
-		 button.setFocusPainted(false);
-	     button.setBorder(null);
-	     button.setForeground(textColor);
-	     button.setBackground(backgroundColor);
+		button.setFocusPainted(false);
+		button.setBorder(null);
+		button.setBorderPainted(true);
+		button.setForeground(textColor);
+	    button.setBackground(backgroundColor);
 	}
-	
 	
 	//Updates the visibility of button
 	public void visibilityState(boolean b){

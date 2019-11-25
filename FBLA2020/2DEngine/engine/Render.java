@@ -177,8 +177,8 @@ public class Render {
 		int x = (int) Math.min(a.getX(), b.getX());//left most x value of the rectangle
 		int y = (int) Math.max(a.getY(), b.getY());//top most y value of the rectangle
 		//the length of rectangle in each dimension is |deta axis|
-		int w = (int) Math.abs(a.getX() - b.getX());
-		int h = (int) Math.abs(a.getY() - b.getY());
+		int w = (int) Math.abs(a.getX() - b.getX()) + 1;
+		int h = (int) Math.abs(a.getY() - b.getY()) + 1;
 		int[] d = {x, y, w, h};
 		return d;
 	}
